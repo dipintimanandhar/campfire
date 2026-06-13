@@ -14,7 +14,7 @@ env:
   PROJECT_ID: "workenv-466705"
   LOCATION: "us"
   GCP_WORKLOAD_IDENTITY_PROVIDER: "projects/workenv-466705/locations/global/workloadIdentityPools/gh/providers/gh"
-  GCP_SERVICE_ACCOUNT: "ci@workenv-466705.iam.gserviceaccount.com"
+  GCP_SERVICE_ACCOUNT: "retailgcc@workenv-466705.iam.gserviceaccount.com"
 
 jobs:
   cleanup-campfire:
