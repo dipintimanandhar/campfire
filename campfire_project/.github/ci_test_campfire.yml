@@ -11,9 +11,9 @@ on:
   workflow_call:
 
 env:
-  PROJECT_ID: "workenv-466705"
+  PROJECT_ID: "workenv-466705" 
   LOCATION: "us"
-  GCP_WORKLOAD_IDENTITY_PROVIDER: "https://iam.googleapis.com/projects/workenv-466705/locations/global/workloadIdentityPools/gh/providers/gh"
+  GCP_WORKLOAD_IDENTITY_PROVIDER: "projects/568104487011/locations/global/workloadIdentityPools/gh/providers/gh"
   GCP_SERVICE_ACCOUNT: "retailgcc@workenv-466705.iam.gserviceaccount.com"
 
 jobs:

@@ -68,3 +68,4 @@ jobs:
           cxas delete --display-name "$D" \
                    --project-id ${{ env.PROJECT_ID }} \
                    --location ${{ env.LOCATION }}
+# Force run trigger
