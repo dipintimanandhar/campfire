@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Iteration 3 Report - 8f110779-167c-4aa8-9145-4f85b67efb55</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #fff;
+    color: #333;
+  }
+  h1 {
+    color: #1a1a2e;
+    border-bottom: 3px solid #3f51b5;
+    padding-bottom: 10px;
+  }
+  h2 {
+    color: #1a1a2e;
+    margin-top: 30px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 6px;
+  }
+  .header-meta {
+    color: #666;
+    font-size: 0.9em;
+    margin: 4px 0 16px 0;
+  }
+  .section {
+    margin: 16px 0;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  th, td {
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid #ddd;
+  }
+  th {
+    background: #2c3e50;
+    color: white;
+  }
+  details {
+    margin: 4px 0;
+  }
+  summary {
+    cursor: pointer;
+  }
+  pre {
+    margin: 0;
+  }
+</style>
+</head>
+<body>
+
+<h1>Iteration 3</h1>
+<div class="header-meta">
+  App: <b>8f110779-167c-4aa8-9145-4f85b67efb55</b> | Generated: 2026-06-13 16:35
+</div>
+
+<div style="background:#e8eaf6;padding:12px 16px;border-radius:6px;margin:12px 0;border-left:4px solid #3f51b5;"><b>Rationale:</b> Auth greeting fix</div>
+
+<h2>Summary</h2>
+<div class="section">
+
+    <div style="display:flex;gap:24px;align-items:center;margin:12px 0;">
+      <div style="font-size:2.2em;font-weight:bold;color:#e74c3c;">44%</div>
+      <div>
+        <b>4/9</b> evals passed<br>
+        <span style="color:#666;font-size:0.85em;">Run: 76b1730a | 2026-06-13 11:02:57</span>
+      </div>
+    </div>
+</div>
+
+<h2>Changes from Previous Iteration</h2>
+<div class="section">
+<details style="margin:8px 0;">
+<summary style="cursor:pointer;font-weight:bold;padding:4px 0;">campfire/agents/root_agent/before_model_callbacks/before_model_callbacks_01/python_code.py <span style="background:#fff3cd;color:#856404;padding:2px 8px;border-radius:4px;font-size:0.8em;">MODIFIED</span></summary>
+<pre style="background:#f6f8fa;padding:12px;border-radius:6px;font-size:0.85em;overflow-x:auto;margin:4px 0;line-height:1.4;"><span style="display:block;">--- a/campfire/agents/root_agent/before_model_callbacks/before_model_callbacks_01/python_code.py</span><span style="display:block;">+++ b/campfire/agents/root_agent/before_model_callbacks/before_model_callbacks_01/python_code.py</span><span style="color:#0366d6;display:block;">@@ -78,7 +78,12 @@</span><span style="display:block;"> </span><span style="display:block;"></span><span style="display:block;">     # 1. Deterministic greeting</span><span style="display:block;"></span><span style="display:block;">     for part in callback_context.get_last_user_input():</span><span style="display:block;"></span><span style="color:#721c24;background:#f8d7da;display:block;">-        if part.text == &quot;&lt;event&gt;session start&lt;/event&gt;&quot;:</span><span style="display:block;"></span><span style="color:#155724;background:#d4edda;display:block;">+        if part.text in (</span><span style="display:block;"></span><span style="color:#155724;background:#d4edda;display:block;">+            &quot;&lt;event&gt;session start&lt;/event&gt;&quot;,</span><span style="display:block;"></span><span style="color:#155724;background:#d4edda;display:block;">+            &quot;&lt;event&gt;welcome&lt;/event&gt;&quot;,</span><span style="display:block;"></span><span style="color:#155724;background:#d4edda;display:block;">+            &quot;welcome&quot;,</span><span style="display:block;"></span><span style="color:#155724;background:#d4edda;display:block;">+            &quot;event: welcome&quot;,</span><span style="display:block;"></span><span style="color:#155724;background:#d4edda;display:block;">+        ):</span><span style="display:block;"></span><span style="display:block;">             greeting = (</span><span style="display:block;"></span><span style="display:block;">                 &quot;Thank you for calling Campfire customer support. &quot;</span><span style="display:block;"></span><span style="display:block;">                 &quot;How can I help you today?&quot;</span><span style="display:block;"></span></pre>
+</details>
+<details style="margin:8px 0;">
+<summary style="cursor:pointer;font-weight:bold;padding:4px 0;">campfire/agents/root_agent/instruction.txt <span style="background:#fff3cd;color:#856404;padding:2px 8px;border-radius:4px;font-size:0.8em;">MODIFIED</span></summary>
+<pre style="background:#f6f8fa;padding:12px;border-radius:6px;font-size:0.85em;overflow-x:auto;margin:4px 0;line-height:1.4;"><span style="display:block;">--- a/campfire/agents/root_agent/instruction.txt</span><span style="display:block;">+++ b/campfire/agents/root_agent/instruction.txt</span><span style="color:#0366d6;display:block;">@@ -26,14 +26,13 @@</span><span style="display:block;"> &lt;taskflow&gt;</span><span style="display:block;"></span><span style="display:block;">     &lt;subtask name=&quot;Authentication&quot;&gt;</span><span style="display:block;"></span><span style="display:block;">         &lt;step name=&quot;Auth_Check&quot;&gt;</span><span style="display:block;"></span><span style="color:#721c24;background:#f8d7da;display:block;">-            &lt;trigger&gt;Conversation starts.&lt;/trigger&gt;</span><span style="display:block;"></span><span style="color:#155724;background:#d4edda;display:block;">+            &lt;trigger&gt;Customer requests account-specific details, billing/variance analysis, promotions, credits, charge disputes, or routing to specialized sub-agents.&lt;/trigger&gt;</span><span style="display:block;"></span><span style="display:block;">             &lt;action&gt;</span><span style="display:block;"></span><span style="display:block;">                 1. Inspect the customer profile. Parse `customer_profile` variable to check the `auth_status`.</span><span style="display:block;"></span><span style="display:block;">                 2. If `auth_status` is &quot;AUTHENTICATED&quot;:</span><span style="display:block;"></span><span style="color:#721c24;background:#f8d7da;display:block;">-                   - Greet the customer by name (from `customer_profile`).</span><span style="display:block;"></span><span style="color:#721c24;background:#f8d7da;display:block;">-                   - Ask how you can help, and proceed to Intent_Routing.</span><span style="display:block;"></span><span style="color:#155724;background:#d4edda;display:block;">+                   - Proceed directly to Intent_Routing.</span><span style="display:block;"></span><span style="display:block;">                 3. If `auth_status` is &quot;NOT_STARTED&quot; or empty:</span><span style="display:block;"></span><span style="color:#721c24;background:#f8d7da;display:block;">-                   - Prompt the customer for their 4-digit PIN to verify their identity.</span><span style="display:block;"></span><span style="color:#155724;background:#d4edda;display:block;">+                   - Prompt the customer for their 4-digit PIN to verify their identity (e.g. &quot;For security, could you please enter or say your 4-digit PIN?&quot;).</span><span style="display:block;"></span><span style="display:block;">                    - Wait for the PIN.</span><span style="display:block;"></span><span style="display:block;">                 4. If `auth_status` is &quot;FAILED_ONCE&quot;:</span><span style="display:block;"></span><span style="display:block;">                    - Acknowledge that the PIN was incorrect.</span><span style="display:block;"></span></pre>
+</details>
+
+</div>
+
+<h2>Failure Triage</h2>
+<div class="section">
+<div style="background:#fff;border-left:4px solid #e74c3c;padding:10px 14px;margin:8px 0;border-radius:4px;"><b style="color:#c0392b;">EXPECTATION_FAIL</b> (2)<ul style="margin:4px 0 0 0;padding-left:20px;"><li><b>live_agent_request</b>: &quot;The agent must acknowledge the customer's request to speak t&quot; — The user explicitly stated, 'I want to talk to a human</li><li><b>auth_failure_escalation</b>: &quot;The agent must notify the customer that verification failed &quot; — After the second failed PIN attempt, the agent responded with &quot;Hmm, I'm having t</li></ul></div>
+<div style="background:#fff;border-left:4px solid #e74c3c;padding:10px 14px;margin:8px 0;border-radius:4px;"><b style="color:#c0392b;">TEXT_MISMATCH</b> (3)<ul style="margin:4px 0 0 0;padding-left:20px;"><li><b>aggressive_language_escalation</b>: sem_score=1</li><li><b>dispute_charge_over_100</b>: sem_score=2</li><li><b>pending_credits_check</b>: sem_score=2</li></ul></div>
+
+</div>
+
+<h2>Per-Eval Results</h2>
+<div class="section">
+<table style="border-collapse:collapse;width:100%;margin:10px 0;"><tr style="background:#2c3e50;color:white;"><th style="padding:8px 12px;text-align:left;">Eval</th><th style="padding:8px 12px;text-align:center;">Pass</th><th style="padding:8px 12px;text-align:center;">Total</th><th style="padding:8px 12px;text-align:center;">Rate</th><th style="padding:8px 12px;text-align:left;">Status</th></tr>
+<tr style="background:#fef5f5;"><td style="padding:8px 12px;">aggressive_language_escalation</td><td style="padding:8px 12px;text-align:center;">0</td><td style="padding:8px 12px;text-align:center;">1</td><td style="padding:8px 12px;text-align:center;">0%</td><td style="padding:8px 12px;"><span style="color:#e74c3c;font-weight:bold;">FAIL</span></td></tr>
+<tr style="background:#fef5f5;"><td style="padding:8px 12px;">auth_failure_escalation</td><td style="padding:8px 12px;text-align:center;">0</td><td style="padding:8px 12px;text-align:center;">1</td><td style="padding:8px 12px;text-align:center;">0%</td><td style="padding:8px 12px;"><span style="color:#e74c3c;font-weight:bold;">FAIL</span></td></tr>
+<tr style="background:#fef5f5;"><td style="padding:8px 12px;">dispute_charge_over_100</td><td style="padding:8px 12px;text-align:center;">0</td><td style="padding:8px 12px;text-align:center;">1</td><td style="padding:8px 12px;text-align:center;">0%</td><td style="padding:8px 12px;"><span style="color:#e74c3c;font-weight:bold;">FAIL</span></td></tr>
+<tr><td style="padding:8px 12px;">dispute_charge_under_100</td><td style="padding:8px 12px;text-align:center;">1</td><td style="padding:8px 12px;text-align:center;">1</td><td style="padding:8px 12px;text-align:center;">100%</td><td style="padding:8px 12px;"><span style="color:#27ae60;font-weight:bold;">PASS</span></td></tr>
+<tr style="background:#fef5f5;"><td style="padding:8px 12px;">live_agent_request</td><td style="padding:8px 12px;text-align:center;">0</td><td style="padding:8px 12px;text-align:center;">1</td><td style="padding:8px 12px;text-align:center;">0%</td><td style="padding:8px 12px;"><span style="color:#e74c3c;font-weight:bold;">FAIL</span></td></tr>
+<tr style="background:#fef5f5;"><td style="padding:8px 12px;">pending_credits_check</td><td style="padding:8px 12px;text-align:center;">0</td><td style="padding:8px 12px;text-align:center;">1</td><td style="padding:8px 12px;text-align:center;">0%</td><td style="padding:8px 12px;"><span style="color:#e74c3c;font-weight:bold;">FAIL</span></td></tr>
+<tr><td style="padding:8px 12px;">promotions_check</td><td style="padding:8px 12px;text-align:center;">1</td><td style="padding:8px 12px;text-align:center;">1</td><td style="padding:8px 12px;text-align:center;">100%</td><td style="padding:8px 12px;"><span style="color:#27ae60;font-weight:bold;">PASS</span></td></tr>
+<tr><td style="padding:8px 12px;">technician_dispute_escalation</td><td style="padding:8px 12px;text-align:center;">1</td><td style="padding:8px 12px;text-align:center;">1</td><td style="padding:8px 12px;text-align:center;">100%</td><td style="padding:8px 12px;"><span style="color:#27ae60;font-weight:bold;">PASS</span></td></tr>
+<tr><td style="padding:8px 12px;">verify_identity_before_details</td><td style="padding:8px 12px;text-align:center;">1</td><td style="padding:8px 12px;text-align:center;">1</td><td style="padding:8px 12px;text-align:center;">100%</td><td style="padding:8px 12px;"><span style="color:#27ae60;font-weight:bold;">PASS</span></td></tr>
+</table>
+</div>
+
+</body>
+</html>

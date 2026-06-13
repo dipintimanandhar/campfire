@@ -1,0 +1,21 @@
+# Virtual Environments
+campfire/
+.venv/
+venv/
+ENV/
+
+# Python Cache & Pytest
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.ipynb_checkpoints/
+
+# IDE / System files
+.DS_Store
+.idea/
+.vscode/
+
+# Agent IDE internal files
+.gemini/
+.claude/

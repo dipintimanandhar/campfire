@@ -1,0 +1,262 @@
+{
+  "total": 15,
+  "passed": 0,
+  "sim_pass_rate": null,
+  "run_short": "bbf0f3b0",
+  "time_str": "2026-06-13 10:44:20",
+  "failures": {
+    "TEXT_MISMATCH": [
+      [
+        "aggressive_language_escalation",
+        "sem_score=1"
+      ],
+      [
+        "aggressive_language_escalation",
+        "sem_score=2"
+      ],
+      [
+        "aggressive_language_escalation",
+        "sem_score=2"
+      ],
+      [
+        "verify_identity_before_details",
+        "sem_score=0"
+      ],
+      [
+        "verify_identity_before_details",
+        "sem_score=1"
+      ],
+      [
+        "verify_identity_before_details",
+        "sem_score=2"
+      ]
+    ],
+    "EXPECTATION_FAIL": [
+      [
+        "live_agent_request",
+        "\"The agent must acknowledge the customer's request to speak t\" \u2014 The user explicitly stated, \"I want to talk to a human"
+      ],
+      [
+        "live_agent_request",
+        "\"The agent must acknowledge the customer's request to speak t\" \u2014 The user explicitly stated, \"I want to talk to a human"
+      ],
+      [
+        "live_agent_request",
+        "\"The agent must acknowledge the customer's request to speak t\" \u2014 The user explicitly stated, \"I want to talk to a human"
+      ],
+      [
+        "dispute_charge_over_100",
+        "\"The agent must call verify_customer_identity with PIN 1234\" \u2014 The custom expectation states that the agent must call `verify_customer_identity"
+      ],
+      [
+        "dispute_charge_over_100",
+        "\"The agent must call verify_customer_identity with PIN 1234\" \u2014 The custom expectation states that the agent must call `verify_customer_identity"
+      ],
+      [
+        "dispute_charge_over_100",
+        "\"The agent must call verify_customer_identity with PIN 1234\" \u2014 The custom expectation states that the agent must call `verify_customer_identity"
+      ],
+      [
+        "auth_failure_escalation",
+        "\"The agent must call verify_customer_identity for each PIN en\" \u2014 The custom expectation states that the agent must call `verify_customer_identity"
+      ],
+      [
+        "auth_failure_escalation",
+        "\"The agent must notify the customer that verification failed \" \u2014 The custom expectation states that 'The agent must notify the customer that veri; \"The agent must call verify_customer_identity for each PIN en\" \u2014 The custom expectation states that 'The agent must call verify_customer_identity"
+      ],
+      [
+        "auth_failure_escalation",
+        "\"The agent must notify the customer that verification failed \" \u2014 The custom expectation states that 'The agent must notify the customer that veri; \"The agent must call verify_customer_identity for each PIN en\" \u2014 The custom expectation states that the agent must call `verify_customer_identity"
+      ]
+    ]
+  },
+  "per_eval": {
+    "aggressive_language_escalation": {
+      "pass": 0,
+      "total": 3,
+      "failures": [
+        [
+          "TEXT_MISMATCH",
+          "sem_score=1"
+        ],
+        [
+          "TEXT_MISMATCH",
+          "sem_score=2"
+        ],
+        [
+          "TEXT_MISMATCH",
+          "sem_score=2"
+        ]
+      ]
+    },
+    "live_agent_request": {
+      "pass": 0,
+      "total": 3,
+      "failures": [
+        [
+          "EXPECTATION_FAIL",
+          "\"The agent must acknowledge the customer's request to speak t\" \u2014 The user explicitly stated, \"I want to talk to a human"
+        ],
+        [
+          "EXPECTATION_FAIL",
+          "\"The agent must acknowledge the customer's request to speak t\" \u2014 The user explicitly stated, \"I want to talk to a human"
+        ],
+        [
+          "EXPECTATION_FAIL",
+          "\"The agent must acknowledge the customer's request to speak t\" \u2014 The user explicitly stated, \"I want to talk to a human"
+        ]
+      ]
+    },
+    "dispute_charge_over_100": {
+      "pass": 0,
+      "total": 3,
+      "failures": [
+        [
+          "EXPECTATION_FAIL",
+          "\"The agent must call verify_customer_identity with PIN 1234\" \u2014 The custom expectation states that the agent must call `verify_customer_identity"
+        ],
+        [
+          "EXPECTATION_FAIL",
+          "\"The agent must call verify_customer_identity with PIN 1234\" \u2014 The custom expectation states that the agent must call `verify_customer_identity"
+        ],
+        [
+          "EXPECTATION_FAIL",
+          "\"The agent must call verify_customer_identity with PIN 1234\" \u2014 The custom expectation states that the agent must call `verify_customer_identity"
+        ]
+      ]
+    },
+    "auth_failure_escalation": {
+      "pass": 0,
+      "total": 3,
+      "failures": [
+        [
+          "EXPECTATION_FAIL",
+          "\"The agent must call verify_customer_identity for each PIN en\" \u2014 The custom expectation states that the agent must call `verify_customer_identity"
+        ],
+        [
+          "EXPECTATION_FAIL",
+          "\"The agent must notify the customer that verification failed \" \u2014 The custom expectation states that 'The agent must notify the customer that veri; \"The agent must call verify_customer_identity for each PIN en\" \u2014 The custom expectation states that 'The agent must call verify_customer_identity"
+        ],
+        [
+          "EXPECTATION_FAIL",
+          "\"The agent must notify the customer that verification failed \" \u2014 The custom expectation states that 'The agent must notify the customer that veri; \"The agent must call verify_customer_identity for each PIN en\" \u2014 The custom expectation states that the agent must call `verify_customer_identity"
+        ]
+      ]
+    },
+    "verify_identity_before_details": {
+      "pass": 0,
+      "total": 3,
+      "failures": [
+        [
+          "TEXT_MISMATCH",
+          "sem_score=0"
+        ],
+        [
+          "TEXT_MISMATCH",
+          "sem_score=1"
+        ],
+        [
+          "TEXT_MISMATCH",
+          "sem_score=2"
+        ]
+      ]
+    }
+  },
+  "per_eval_by_type": {
+    "golden": {
+      "aggressive_language_escalation": {
+        "pass": 0,
+        "total": 3,
+        "failures": [
+          [
+            "TEXT_MISMATCH",
+            "sem_score=1"
+          ],
+          [
+            "TEXT_MISMATCH",
+            "sem_score=2"
+          ],
+          [
+            "TEXT_MISMATCH",
+            "sem_score=2"
+          ]
+        ]
+      },
+      "live_agent_request": {
+        "pass": 0,
+        "total": 3,
+        "failures": [
+          [
+            "EXPECTATION_FAIL",
+            "\"The agent must acknowledge the customer's request to speak t\" \u2014 The user explicitly stated, \"I want to talk to a human"
+          ],
+          [
+            "EXPECTATION_FAIL",
+            "\"The agent must acknowledge the customer's request to speak t\" \u2014 The user explicitly stated, \"I want to talk to a human"
+          ],
+          [
+            "EXPECTATION_FAIL",
+            "\"The agent must acknowledge the customer's request to speak t\" \u2014 The user explicitly stated, \"I want to talk to a human"
+          ]
+        ]
+      },
+      "dispute_charge_over_100": {
+        "pass": 0,
+        "total": 3,
+        "failures": [
+          [
+            "EXPECTATION_FAIL",
+            "\"The agent must call verify_customer_identity with PIN 1234\" \u2014 The custom expectation states that the agent must call `verify_customer_identity"
+          ],
+          [
+            "EXPECTATION_FAIL",
+            "\"The agent must call verify_customer_identity with PIN 1234\" \u2014 The custom expectation states that the agent must call `verify_customer_identity"
+          ],
+          [
+            "EXPECTATION_FAIL",
+            "\"The agent must call verify_customer_identity with PIN 1234\" \u2014 The custom expectation states that the agent must call `verify_customer_identity"
+          ]
+        ]
+      },
+      "auth_failure_escalation": {
+        "pass": 0,
+        "total": 3,
+        "failures": [
+          [
+            "EXPECTATION_FAIL",
+            "\"The agent must call verify_customer_identity for each PIN en\" \u2014 The custom expectation states that the agent must call `verify_customer_identity"
+          ],
+          [
+            "EXPECTATION_FAIL",
+            "\"The agent must notify the customer that verification failed \" \u2014 The custom expectation states that 'The agent must notify the customer that veri; \"The agent must call verify_customer_identity for each PIN en\" \u2014 The custom expectation states that 'The agent must call verify_customer_identity"
+          ],
+          [
+            "EXPECTATION_FAIL",
+            "\"The agent must notify the customer that verification failed \" \u2014 The custom expectation states that 'The agent must notify the customer that veri; \"The agent must call verify_customer_identity for each PIN en\" \u2014 The custom expectation states that the agent must call `verify_customer_identity"
+          ]
+        ]
+      },
+      "verify_identity_before_details": {
+        "pass": 0,
+        "total": 3,
+        "failures": [
+          [
+            "TEXT_MISMATCH",
+            "sem_score=0"
+          ],
+          [
+            "TEXT_MISMATCH",
+            "sem_score=1"
+          ],
+          [
+            "TEXT_MISMATCH",
+            "sem_score=2"
+          ]
+        ]
+      }
+    },
+    "sim": {},
+    "tool_test": {},
+    "callback_test": {}
+  }
+}

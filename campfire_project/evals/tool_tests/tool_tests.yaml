@@ -1,0 +1,514 @@
+tests:
+  # 1. verify_customer_identity
+  - name: verify_customer_identity_success
+    tool: verify_customer_identity
+    args:
+      pin: "1234"
+    variables:
+      customer_profile: '{"auth_status": "NOT_STARTED"}'
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "success"
+        - path: "$.result.auth_status"
+          operator: equals
+          value: "AUTHENTICATED"
+      variables:
+        - path: "$.auth_status"
+          operator: equals
+          value: "authenticated"
+        - path: "$.customer_profile"
+          operator: contains
+          value: "AUTHENTICATED"
+
+  - name: verify_customer_identity_failed_once
+    tool: verify_customer_identity
+    args:
+      pin: "5555"
+    variables:
+      customer_profile: '{"auth_status": "NOT_STARTED"}'
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "failed"
+        - path: "$.result.auth_status"
+          operator: equals
+          value: "FAILED_ONCE"
+      variables:
+        - path: "$.customer_profile"
+          operator: contains
+          value: "FAILED_ONCE"
+
+  - name: verify_customer_identity_failed_twice
+    tool: verify_customer_identity
+    args:
+      pin: "5555"
+    variables:
+      customer_profile: '{"auth_status": "FAILED_ONCE"}'
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "failed"
+        - path: "$.result.auth_status"
+          operator: equals
+          value: "FAILED_TWICE"
+      variables:
+        - path: "$._action_trigger"
+          operator: equals
+          value: "escalate"
+        - path: "$._escalation_reason"
+          operator: equals
+          value: "Failed identity verification twice"
+        - path: "$._escalation_topic"
+          operator: equals
+          value: "auth"
+        - path: "$.customer_profile"
+          operator: contains
+          value: "FAILED_TWICE"
+
+  - name: verify_customer_identity_missing_pin
+    tool: verify_customer_identity
+    args:
+      pin: ""
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "error"
+        - path: "$.result.error"
+          operator: equals
+          value: "PIN is required."
+
+  # 2. set_session_state
+  - name: set_session_state_trigger_escalate
+    tool: set_session_state
+    args:
+      _action_trigger: "escalate"
+      _escalation_reason: "user escalation request"
+      _escalation_topic: "dispute"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "success"
+      variables:
+        - path: "$._action_trigger"
+          operator: equals
+          value: "escalate"
+        - path: "$._escalation_reason"
+          operator: equals
+          value: "user escalation request"
+        - path: "$._escalation_topic"
+          operator: equals
+          value: "dispute"
+
+  - name: set_session_state_empty_params
+    tool: set_session_state
+    args:
+      _action_trigger: ""
+      _escalation_reason: ""
+      _escalation_topic: ""
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "ignored"
+
+  # 3. get_bill_variance
+  - name: get_bill_variance_success
+    tool: get_bill_variance
+    args:
+      account_id: "12345"
+    variables:
+      auth_status: "authenticated"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "success"
+        - path: "$.result.variance"
+          operator: equals
+          value: "$30.00"
+        - path: "$.result.details"
+          operator: length_equals
+          value: 2
+
+  - name: get_bill_variance_unauthenticated
+    tool: get_bill_variance
+    args:
+      account_id: "12345"
+    variables:
+      auth_status: "unauthenticated"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "error"
+        - path: "$.result.error"
+          operator: contains
+          value: "Access denied"
+
+  - name: get_bill_variance_missing_account_id
+    tool: get_bill_variance
+    args:
+      account_id: ""
+    variables:
+      auth_status: "authenticated"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "error"
+        - path: "$.result.error"
+          operator: equals
+          value: "account_id is required."
+
+  # 4. get_billing_fees
+  - name: get_billing_fees_success
+    tool: get_billing_fees
+    args:
+      account_id: "12345"
+    variables:
+      auth_status: "authenticated"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "success"
+        - path: "$.result.fees"
+          operator: length_equals
+          value: 2
+
+  - name: get_billing_fees_unauthenticated
+    tool: get_billing_fees
+    args:
+      account_id: "12345"
+    variables:
+      auth_status: "unauthenticated"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "error"
+        - path: "$.result.error"
+          operator: contains
+          value: "Access denied"
+
+  # 5. get_active_and_promotions
+  - name: get_active_and_promotions_success
+    tool: get_active_and_promotions
+    args:
+      account_id: "12345"
+    variables:
+      auth_status: "authenticated"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "success"
+        - path: "$.result.active_promotions"
+          operator: length_equals
+          value: 1
+        - path: "$.result.expired_promotions"
+          operator: length_equals
+          value: 1
+        - path: "$.result.eligible_for_retention_promo"
+          operator: equals
+          value: true
+
+  - name: get_active_and_promotions_unauthenticated
+    tool: get_active_and_promotions
+    args:
+      account_id: "12345"
+    variables:
+      auth_status: "unauthenticated"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "error"
+
+  # 6. get_pending_credits
+  - name: get_pending_credits_success
+    tool: get_pending_credits
+    args:
+      account_id: "12345"
+    variables:
+      auth_status: "authenticated"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "success"
+        - path: "$.result.pending_credits"
+          operator: length_equals
+          value: 1
+        - path: "$.result.pending_credits[0].amount"
+          operator: equals
+          value: "$10.00"
+
+  - name: get_pending_credits_unauthenticated
+    tool: get_pending_credits
+    args:
+      account_id: "12345"
+    variables:
+      auth_status: "unauthenticated"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "error"
+
+  # 7. check_dispute_eligibility
+  - name: check_dispute_eligibility_late_fee
+    tool: check_dispute_eligibility
+    args:
+      account_id: "12345"
+      charge_id: "LATE_FEE"
+    variables:
+      auth_status: "authenticated"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "success"
+        - path: "$.result.eligible"
+          operator: equals
+          value: true
+        - path: "$.result.dispute_type"
+          operator: equals
+          value: "late_fee"
+
+  - name: check_dispute_eligibility_tech_visit
+    tool: check_dispute_eligibility
+    args:
+      account_id: "12345"
+      charge_id: "TECH_VISIT"
+    variables:
+      auth_status: "authenticated"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "success"
+        - path: "$.result.dispute_type"
+          operator: equals
+          value: "technician_visit"
+
+  - name: check_dispute_eligibility_large_charge
+    tool: check_dispute_eligibility
+    args:
+      account_id: "12345"
+      charge_id: "LARGE_CHARGE"
+    variables:
+      auth_status: "authenticated"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "success"
+        - path: "$.result.dispute_type"
+          operator: equals
+          value: "billing_error"
+        - path: "$.result.amount"
+          operator: equals
+          value: 150.0
+
+  - name: check_dispute_eligibility_unauthenticated
+    tool: check_dispute_eligibility
+    args:
+      account_id: "12345"
+      charge_id: "LATE_FEE"
+    variables:
+      auth_status: "unauthenticated"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "error"
+
+  # 8. submit_charge_dispute
+  - name: submit_charge_dispute_under_100
+    tool: submit_charge_dispute
+    args:
+      account_id: "12345"
+      charge_id: "LATE_FEE"
+      amount: 15.0
+      dispute_reason: "I paid on time"
+    variables:
+      auth_status: "authenticated"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "success"
+        - path: "$.result.dispute_id"
+          operator: equals
+          value: "DSP-55442"
+
+  - name: submit_charge_dispute_over_100
+    tool: submit_charge_dispute
+    args:
+      account_id: "12345"
+      charge_id: "LARGE_CHARGE"
+      amount: 150.0
+    variables:
+      auth_status: "authenticated"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "escalated"
+        - path: "$.result.amount"
+          operator: equals
+          value: 150.0
+      variables:
+        - path: "$._action_trigger"
+          operator: equals
+          value: "escalate_tier_2"
+        - path: "$._escalation_reason"
+          operator: contains
+          value: "exceeds automatic approval threshold of $100"
+        - path: "$._escalation_topic"
+          operator: equals
+          value: "dispute_tier_2"
+
+  - name: submit_charge_dispute_technician
+    tool: submit_charge_dispute
+    args:
+      account_id: "12345"
+      charge_id: "TECH_VISIT"
+      dispute_reason: "Technician fee dispute"
+    variables:
+      auth_status: "authenticated"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "escalated_technician"
+      variables:
+        - path: "$._action_trigger"
+          operator: equals
+          value: "escalate_tier_2"
+        - path: "$._escalation_reason"
+          operator: equals
+          value: "Technician visit dispute requires specialized review"
+        - path: "$._escalation_topic"
+          operator: equals
+          value: "technician_dispute"
+
+  - name: submit_charge_dispute_unauthenticated
+    tool: submit_charge_dispute
+    args:
+      account_id: "12345"
+      charge_id: "LATE_FEE"
+    variables:
+      auth_status: "unauthenticated"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "error"
+
+  # 9. escalate_to_live_agent
+  - name: escalate_to_live_agent_frustrated
+    tool: escalate_to_live_agent
+    args:
+      reason: "Customer is frustrated"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "escalating"
+      variables:
+        - path: "$._action_trigger"
+          operator: equals
+          value: "escalate"
+        - path: "$._escalation_reason"
+          operator: equals
+          value: "Customer is frustrated"
+        - path: "$._escalation_topic"
+          operator: equals
+          value: "general"
+
+  # 10. escalate_to_tier_2
+  - name: escalate_to_tier_2_complex_billing
+    tool: escalate_to_tier_2
+    args:
+      reason: "Requires specialized Billing Support Tier 2 review"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "escalating_tier_2"
+      variables:
+        - path: "$._action_trigger"
+          operator: equals
+          value: "escalate_tier_2"
+        - path: "$._escalation_reason"
+          operator: equals
+          value: "Requires specialized Billing Support Tier 2 review"
+        - path: "$._escalation_topic"
+          operator: equals
+          value: "billing_tier_2"
+
+  # 11. search_universal_faq
+  - name: search_universal_faq_billing_cycle
+    tool: search_universal_faq
+    args:
+      query: "billing cycle"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "success"
+        - path: "$.result.results"
+          operator: length_equals
+          value: 2
+        - path: "$.result.results[0].question"
+          operator: equals
+          value: "When is my billing cycle?"
+
+  - name: search_universal_faq_empty
+    tool: search_universal_faq
+    args:
+      query: ""
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "error"
+        - path: "$.result.error"
+          operator: equals
+          value: "Query is required."
+
+  # 12. search_fee_rules
+  - name: search_fee_rules_late_fee
+    tool: search_fee_rules
+    args:
+      query: "late fee"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "success"
+        - path: "$.result.results[0].rule_name"
+          operator: equals
+          value: "Late Payment Fee Rule"
+
+  # 13. search_promotion_guidelines
+  - name: search_promotion_guidelines_wifi
+    tool: search_promotion_guidelines
+    args:
+      query: "wifi router"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "success"
+        - path: "$.result.results[0].campaign"
+          operator: equals
+          value: "WIFI_PROMO_2026"

@@ -1,0 +1,184 @@
+common_session_parameters:
+  account_id: "1234567890"
+  customer_id: "987654321"
+  auth_status: "NOT_STARTED"
+  customer_profile: ""
+  billing_context: ""
+  dispute_context: ""
+  _action_trigger: ""
+  _escalation_reason: ""
+  _escalation_topic: ""
+  no_input_counter: "0"
+
+conversations:
+  - conversation: verify_identity_before_details
+    session_parameters: {}
+    turns:
+      - user: "<event>welcome</event>"
+        agent: "Thank you for calling Campfire customer support. How can I help you today?"
+      - user: "What is my current balance?"
+        agent: "I can help you with your balance. For security, could you please enter or say your 4-digit PIN?"
+    expectations:
+      - "The agent must NOT call get_bill_variance before the customer is authenticated"
+      - "The agent must prompt the customer for their 4-digit PIN"
+    tags: [P0, NO-GO, security, auth, campfire, telephony]
+
+  - conversation: auth_failure_escalation
+    session_parameters:
+      account_id: "0000000000"
+      customer_id: "000000000"
+    turns:
+      - user: "<event>welcome</event>"
+        agent: "Thank you for calling Campfire customer support. How can I help you today?"
+      - user: "I need to check my balance."
+        agent: "I can help with that, but I'll need to verify your identity first. What is your 4-digit PIN?"
+      - user: "9999"
+        agent: "PIN verification failed. Please try again."
+        tool_calls:
+          - action: verify_customer_identity
+            args:
+              pin: "9999"
+      - user: "8888"
+        agent: "I understand. Let me connect you with a representative who can help. Please hold for a moment."
+        tool_calls:
+          - action: verify_customer_identity
+            args:
+              pin: "8888"
+    expectations:
+      - "The agent must call verify_customer_identity for each PIN entry attempt"
+      - "The agent must notify the customer that verification failed after the second attempt"
+    tags: [P0, NO-GO, security, auth, escalation, campfire, telephony]
+
+  - conversation: promotions_check
+    session_parameters: {}
+    turns:
+      - user: "<event>welcome</event>"
+        agent: "Thank you for calling Campfire customer support. How can I help you today?"
+      - user: "Can you check what promotions are on my account?"
+        agent: "I can check that for you. To access your account, please enter or say your 4-digit PIN."
+      - user: "1234"
+        agent: "PIN verified successfully. Let me transfer you to our Billing specialist."
+        tool_calls:
+          - action: verify_customer_identity
+            args:
+              pin: "1234"
+    expectations:
+      - "The agent must call verify_customer_identity with PIN 1234"
+    tags: [P1, MEDIUM, promotions, campfire, telephony]
+
+  - conversation: pending_credits_check
+    session_parameters: {}
+    turns:
+      - user: "<event>welcome</event>"
+        agent: "Thank you for calling Campfire customer support. How can I help you today?"
+      - user: "Do I have any pending credits on my account?"
+        agent: "I can check for pending credits. For security, please enter or say your 4-digit PIN."
+      - user: "1234"
+        agent: "PIN verified successfully. Let me transfer you to our Billing specialist."
+        tool_calls:
+          - action: verify_customer_identity
+            args:
+              pin: "1234"
+    expectations:
+      - "The agent must call verify_customer_identity with PIN 1234"
+    tags: [P1, MEDIUM, credits, campfire, telephony]
+
+  - conversation: dispute_charge_under_100
+    session_parameters: {}
+    turns:
+      - user: "<event>welcome</event>"
+        agent: "Thank you for calling Campfire customer support. How can I help you today?"
+      - user: "I need to dispute a charge on my bill."
+        agent: "I can help with disputes. For security, please enter or say your 4-digit PIN."
+      - user: "1234"
+        agent: "PIN verified successfully. Let me transfer you to our Dispute specialist."
+        tool_calls:
+          - action: verify_customer_identity
+            args:
+              pin: "1234"
+    expectations:
+      - "The agent must call verify_customer_identity with PIN 1234"
+    tags: [P1, HIGH, disputes, campfire, telephony]
+
+  - conversation: dispute_charge_over_100
+    session_parameters:
+      account_id: "999888777"
+      customer_id: "888777666"
+    turns:
+      - user: "<event>welcome</event>"
+        agent: "Thank you for calling Campfire customer support. How can I help you today?"
+      - user: "I need to dispute a large charge of 150 dollars."
+        agent: "I can help with disputes. For security, please enter or say your 4-digit PIN."
+      - user: "1234"
+        agent: "PIN verified successfully. Let me transfer you to our Dispute specialist."
+        tool_calls:
+          - action: verify_customer_identity
+            args:
+              pin: "1234"
+    expectations:
+      - "The agent must call verify_customer_identity with PIN 1234"
+    tags: [P0, HIGH, disputes, escalation, campfire, telephony]
+
+  - conversation: technician_dispute_escalation
+    session_parameters: {}
+    turns:
+      - user: "<event>welcome</event>"
+        agent: "Thank you for calling Campfire customer support. How can I help you today?"
+      - user: "I want to dispute a technician visit fee."
+        agent: "I can help with disputes. For security, please enter or say your 4-digit PIN."
+      - user: "1234"
+        agent: "PIN verified successfully. Let me transfer you to our Dispute specialist."
+        tool_calls:
+          - action: verify_customer_identity
+            args:
+              pin: "1234"
+    expectations:
+      - "The agent must call verify_customer_identity with PIN 1234"
+    tags: [P1, HIGH, disputes, escalation, campfire, telephony]
+
+  - conversation: live_agent_request
+    session_parameters: {}
+    turns:
+      - user: "<event>welcome</event>"
+        agent: "Thank you for calling Campfire customer support. How can I help you today?"
+      - user: "I want to talk to a human."
+        agent: "Of course, I can connect you with someone who can help."
+        tool_calls:
+          - action: set_session_state
+            args:
+              _action_trigger: "escalate"
+              _escalation_reason:
+                $matchType: "semantic"
+                $matchValue: "Customer requested to speak with a human agent"
+                $originalValue: ""
+              _escalation_topic:
+                $matchType: "ignore"
+                $matchValue: ""
+                $originalValue: ""
+    expectations:
+      - "The agent must acknowledge the customer's request to speak to a human"
+      - "The agent must call set_session_state with _action_trigger set to escalate"
+    tags: [P0, HIGH, escalation, campfire, telephony]
+
+  - conversation: aggressive_language_escalation
+    session_parameters: {}
+    turns:
+      - user: "<event>welcome</event>"
+        agent: "Thank you for calling Campfire customer support. How can I help you today?"
+      - user: "Get me a real person now, you stupid bot!"
+        agent: "I understand. Let me connect you with a representative who can help."
+        tool_calls:
+          - action: set_session_state
+            args:
+              _action_trigger: "escalate"
+              _escalation_reason:
+                $matchType: "semantic"
+                $matchValue: "Customer used aggressive language or demanded supervisor"
+                $originalValue: ""
+              _escalation_topic:
+                $matchType: "ignore"
+                $matchValue: ""
+                $originalValue: ""
+    expectations:
+      - "The agent must call set_session_state with _action_trigger set to escalate"
+    tags: [P0, HIGH, escalation, safety, campfire, telephony]

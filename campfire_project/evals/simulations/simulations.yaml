@@ -1,0 +1,36 @@
+- name: bill_variance_happy_path
+  tags: [P1, HIGH, billing, variance, campfire, telephony]
+  steps:
+    - goal: Verify the month-over-month billing variance by authenticating first, checking the bill variance, and retrieving detailed fee information for the late payment fee and technician visit fee.
+      success_criteria: The customer successfully authenticates, receives an explanation that the bill increased by $30.00 due to a $15.00 Late Payment Fee and a $15.00 Technician Visit Fee, and gets details about these fees. Being satisfied with the explanation counts as a successful outcome.
+      response_guide: "Start by asking why your bill went up this month. When asked to verify identity, provide PIN 1234. Once authenticated, ask for details on the fees causing the increase. Confirm you understand and end the call."
+      max_turns: 18
+  expectations:
+    - "The agent must prompt the customer for their 4-digit PIN to verify their identity."
+    - "The agent must call the identity verification tool once the PIN is provided."
+    - "The agent must call the bill variance tool to compare current and previous bills."
+    - "The agent must explain that the bill increased by $30.00."
+    - "The agent must identify the $15.00 Late Payment Fee and the $15.00 Technician Visit Fee."
+    - "The agent must call the billing fees tool to retrieve details about the fees."
+    - "The agent must call the fee rules tool to explain the policies behind the fees."
+  session_parameters:
+    account_id: "1234567890"
+    customer_id: "987654321"
+
+- name: universal_faq_search
+  tags: [P2, MEDIUM, faq, campfire, telephony]
+  steps:
+    - goal: Verify the universal FAQ search behavior by asking general questions about payment methods and billing cycles, providing authentication when prompted.
+      success_criteria: The customer successfully authenticates, receives clear answers explaining supported payment methods (credit/debit cards, ACH, autopay) and billing cycle details (monthly, invoices generated on the 1st, due on the 25th) retrieved from the FAQ knowledge base. Getting accurate policy information counts as a successful outcome.
+      response_guide: "Start by asking what payment methods are accepted. When prompted for authentication, provide PIN 1234. After getting the answer, ask when the billing cycle starts and ends. Once both are answered, say thank you and end the conversation."
+      max_turns: 16
+  expectations:
+    - "The agent must prompt the customer for their 4-digit PIN to verify identity."
+    - "The agent must call the identity verification tool."
+    - "The agent must call the universal FAQ search tool to look up accepted payment methods."
+    - "The agent must explain that credit/debit cards and ACH transfers are supported."
+    - "The agent must call the universal FAQ search tool to look up billing cycle details."
+    - "The agent must explain that invoices are generated on the 1st of the month."
+  session_parameters:
+    account_id: "1234567890"
+    customer_id: "987654321"

@@ -1,0 +1,182 @@
+{
+  "total": 9,
+  "passed": 4,
+  "sim_pass_rate": null,
+  "run_short": "76b1730a",
+  "time_str": "2026-06-13 11:02:57",
+  "failures": {
+    "EXPECTATION_FAIL": [
+      [
+        "live_agent_request",
+        "\"The agent must acknowledge the customer's request to speak t\" \u2014 The user explicitly stated, 'I want to talk to a human"
+      ],
+      [
+        "auth_failure_escalation",
+        "\"The agent must notify the customer that verification failed \" \u2014 After the second failed PIN attempt, the agent responded with \"Hmm, I'm having t"
+      ]
+    ],
+    "TEXT_MISMATCH": [
+      [
+        "aggressive_language_escalation",
+        "sem_score=1"
+      ],
+      [
+        "dispute_charge_over_100",
+        "sem_score=2"
+      ],
+      [
+        "pending_credits_check",
+        "sem_score=2"
+      ]
+    ]
+  },
+  "per_eval": {
+    "live_agent_request": {
+      "pass": 0,
+      "total": 1,
+      "failures": [
+        [
+          "EXPECTATION_FAIL",
+          "\"The agent must acknowledge the customer's request to speak t\" \u2014 The user explicitly stated, 'I want to talk to a human"
+        ]
+      ]
+    },
+    "aggressive_language_escalation": {
+      "pass": 0,
+      "total": 1,
+      "failures": [
+        [
+          "TEXT_MISMATCH",
+          "sem_score=1"
+        ]
+      ]
+    },
+    "promotions_check": {
+      "pass": 1,
+      "total": 1,
+      "failures": []
+    },
+    "technician_dispute_escalation": {
+      "pass": 1,
+      "total": 1,
+      "failures": []
+    },
+    "dispute_charge_over_100": {
+      "pass": 0,
+      "total": 1,
+      "failures": [
+        [
+          "TEXT_MISMATCH",
+          "sem_score=2"
+        ]
+      ]
+    },
+    "auth_failure_escalation": {
+      "pass": 0,
+      "total": 1,
+      "failures": [
+        [
+          "EXPECTATION_FAIL",
+          "\"The agent must notify the customer that verification failed \" \u2014 After the second failed PIN attempt, the agent responded with \"Hmm, I'm having t"
+        ]
+      ]
+    },
+    "pending_credits_check": {
+      "pass": 0,
+      "total": 1,
+      "failures": [
+        [
+          "TEXT_MISMATCH",
+          "sem_score=2"
+        ]
+      ]
+    },
+    "dispute_charge_under_100": {
+      "pass": 1,
+      "total": 1,
+      "failures": []
+    },
+    "verify_identity_before_details": {
+      "pass": 1,
+      "total": 1,
+      "failures": []
+    }
+  },
+  "per_eval_by_type": {
+    "golden": {
+      "live_agent_request": {
+        "pass": 0,
+        "total": 1,
+        "failures": [
+          [
+            "EXPECTATION_FAIL",
+            "\"The agent must acknowledge the customer's request to speak t\" \u2014 The user explicitly stated, 'I want to talk to a human"
+          ]
+        ]
+      },
+      "aggressive_language_escalation": {
+        "pass": 0,
+        "total": 1,
+        "failures": [
+          [
+            "TEXT_MISMATCH",
+            "sem_score=1"
+          ]
+        ]
+      },
+      "promotions_check": {
+        "pass": 1,
+        "total": 1,
+        "failures": []
+      },
+      "technician_dispute_escalation": {
+        "pass": 1,
+        "total": 1,
+        "failures": []
+      },
+      "dispute_charge_over_100": {
+        "pass": 0,
+        "total": 1,
+        "failures": [
+          [
+            "TEXT_MISMATCH",
+            "sem_score=2"
+          ]
+        ]
+      },
+      "auth_failure_escalation": {
+        "pass": 0,
+        "total": 1,
+        "failures": [
+          [
+            "EXPECTATION_FAIL",
+            "\"The agent must notify the customer that verification failed \" \u2014 After the second failed PIN attempt, the agent responded with \"Hmm, I'm having t"
+          ]
+        ]
+      },
+      "pending_credits_check": {
+        "pass": 0,
+        "total": 1,
+        "failures": [
+          [
+            "TEXT_MISMATCH",
+            "sem_score=2"
+          ]
+        ]
+      },
+      "dispute_charge_under_100": {
+        "pass": 1,
+        "total": 1,
+        "failures": []
+      },
+      "verify_identity_before_details": {
+        "pass": 1,
+        "total": 1,
+        "failures": []
+      }
+    },
+    "sim": {},
+    "tool_test": {},
+    "callback_test": {}
+  }
+}

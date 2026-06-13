@@ -1,0 +1,157 @@
+{
+  "app_name": "projects/workenv-466705/locations/us/apps/8f110779-167c-4aa8-9145-4f85b67efb55",
+  "timestamp": "2026-06-13T10:39:44.685648Z",
+  "gates": [
+    {
+      "gate": 1,
+      "name": "Pull, Lint and Push",
+      "status": "fail",
+      "findings": [
+        {
+          "step": "push",
+          "stdout": "Pushing app from /Users/dipintim/Documents/campfire/campfire_project/cxas_app/...\nPushing to existing app... Overwriting if supported.\nUploading to CES...\nWaiting for import to complete...\nFailed to push app: 400 ImportApp must contain an app resource. 3: ImportApp must contain an app resource.\n",
+          "stderr": ""
+        }
+      ],
+      "warnings": [],
+      "error": "Push failed"
+    },
+    {
+      "gate": 2,
+      "name": "Agent hierarchy",
+      "status": "pass",
+      "findings": [
+        {
+          "root_agent": "root_agent",
+          "agents": [
+            "billing_agent",
+            "dispute_agent",
+            "root_agent"
+          ]
+        }
+      ],
+      "warnings": [],
+      "error": null
+    },
+    {
+      "gate": 3,
+      "name": "Tool associations",
+      "status": "pass",
+      "findings": [
+        {
+          "platform_tools": [
+            "check_dispute_eligibility",
+            "escalate_to_live_agent",
+            "escalate_to_tier_2",
+            "get_active_and_promotions",
+            "get_bill_variance",
+            "get_billing_fees",
+            "get_pending_credits",
+            "search_fee_rules",
+            "search_promotion_guidelines",
+            "search_universal_faq",
+            "set_session_state",
+            "submit_charge_dispute",
+            "verify_customer_identity"
+          ],
+          "per_agent_tools": {
+            "billing_agent": {
+              "tools": [
+                "get_bill_variance",
+                "get_billing_fees",
+                "get_active_and_promotions",
+                "get_pending_credits",
+                "search_fee_rules",
+                "search_promotion_guidelines",
+                "set_session_state",
+                "escalate_to_live_agent",
+                "end_session"
+              ],
+              "toolsets": []
+            },
+            "dispute_agent": {
+              "tools": [
+                "check_dispute_eligibility",
+                "submit_charge_dispute",
+                "set_session_state",
+                "escalate_to_tier_2",
+                "end_session"
+              ],
+              "toolsets": []
+            },
+            "root_agent": {
+              "tools": [
+                "verify_customer_identity",
+                "set_session_state",
+                "search_universal_faq",
+                "escalate_to_live_agent",
+                "end_session"
+              ],
+              "toolsets": []
+            }
+          }
+        }
+      ],
+      "warnings": [],
+      "error": null
+    },
+    {
+      "gate": 4,
+      "name": "Callback inventory + test discovery",
+      "status": "pass",
+      "findings": [
+        {
+          "callbacks_per_agent": {
+            "billing_agent": {
+              "before_model_callbacks": 1,
+              "after_model_callbacks": 1
+            },
+            "dispute_agent": {
+              "before_model_callbacks": 1,
+              "after_model_callbacks": 1
+            },
+            "root_agent": {
+              "before_model_callbacks": 1,
+              "after_model_callbacks": 1,
+              "before_agent_callbacks": 1
+            }
+          },
+          "total": 7
+        },
+        {
+          "tests_authored": 7,
+          "tests_discoverable_by_runner": 7
+        }
+      ],
+      "warnings": [],
+      "error": null
+    },
+    {
+      "gate": 5,
+      "name": "Single-turn smoke test",
+      "status": "pass",
+      "findings": [
+        {
+          "session_id": "gate5-71d05e41",
+          "status": "responded"
+        }
+      ],
+      "warnings": [],
+      "error": null
+    },
+    {
+      "gate": 6,
+      "name": "Multi-turn smoke test",
+      "status": "skipped",
+      "findings": [],
+      "warnings": [],
+      "error": null
+    }
+  ],
+  "overall": {
+    "passed": 4,
+    "failed": 1,
+    "skipped": 1,
+    "all_pass": false
+  }
+}

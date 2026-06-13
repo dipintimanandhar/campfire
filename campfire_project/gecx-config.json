@@ -1,0 +1,20 @@
+{
+  "gcp_project_id": "workenv-466705",
+  "location": "us",
+  "app_name": "campfire",
+  "deployed_app_id": "8f110779-167c-4aa8-9145-4f85b67efb55",
+  "app_dir": "cxas_app/",
+  "model": "gemini-3-flash",
+  "modality": "text",
+  "default_channel": "text",
+  "environments": {
+    "dev": {
+      "app_id": "8f110779-167c-4aa8-9145-4f85b67efb55",
+      "description": "Development/sandbox app"
+    },
+    "prod": {
+      "app_id": null,
+      "description": "Production app (not yet configured)"
+    }
+  }
+}

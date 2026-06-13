@@ -1,0 +1,151 @@
+{
+  "app_name": "projects/workenv-466705/locations/us/apps/8f110779-167c-4aa8-9145-4f85b67efb55",
+  "timestamp": "2026-06-13T10:43:14.859063Z",
+  "gates": [
+    {
+      "gate": 1,
+      "name": "Pull, Lint and Push",
+      "status": "pass",
+      "findings": [],
+      "warnings": [],
+      "error": null
+    },
+    {
+      "gate": 2,
+      "name": "Agent hierarchy",
+      "status": "pass",
+      "findings": [
+        {
+          "root_agent": "root_agent",
+          "agents": [
+            "billing_agent",
+            "dispute_agent",
+            "root_agent"
+          ]
+        }
+      ],
+      "warnings": [],
+      "error": null
+    },
+    {
+      "gate": 3,
+      "name": "Tool associations",
+      "status": "pass",
+      "findings": [
+        {
+          "platform_tools": [
+            "check_dispute_eligibility",
+            "escalate_to_live_agent",
+            "escalate_to_tier_2",
+            "get_active_and_promotions",
+            "get_bill_variance",
+            "get_billing_fees",
+            "get_pending_credits",
+            "search_fee_rules",
+            "search_promotion_guidelines",
+            "search_universal_faq",
+            "set_session_state",
+            "submit_charge_dispute",
+            "verify_customer_identity"
+          ],
+          "per_agent_tools": {
+            "billing_agent": {
+              "tools": [
+                "end_session",
+                "escalate_to_live_agent",
+                "get_active_and_promotions",
+                "get_bill_variance",
+                "get_billing_fees",
+                "get_pending_credits",
+                "search_fee_rules",
+                "search_promotion_guidelines",
+                "set_session_state"
+              ],
+              "toolsets": []
+            },
+            "dispute_agent": {
+              "tools": [
+                "check_dispute_eligibility",
+                "end_session",
+                "escalate_to_tier_2",
+                "set_session_state",
+                "submit_charge_dispute"
+              ],
+              "toolsets": []
+            },
+            "root_agent": {
+              "tools": [
+                "end_session",
+                "escalate_to_live_agent",
+                "search_universal_faq",
+                "set_session_state",
+                "verify_customer_identity"
+              ],
+              "toolsets": []
+            }
+          }
+        }
+      ],
+      "warnings": [],
+      "error": null
+    },
+    {
+      "gate": 4,
+      "name": "Callback inventory + test discovery",
+      "status": "pass",
+      "findings": [
+        {
+          "callbacks_per_agent": {
+            "billing_agent": {
+              "before_model_callbacks": 1,
+              "after_model_callbacks": 1
+            },
+            "dispute_agent": {
+              "before_model_callbacks": 1,
+              "after_model_callbacks": 1
+            },
+            "root_agent": {
+              "before_model_callbacks": 1,
+              "after_model_callbacks": 1,
+              "before_agent_callbacks": 1
+            }
+          },
+          "total": 7
+        },
+        {
+          "tests_authored": 7,
+          "tests_discoverable_by_runner": 7
+        }
+      ],
+      "warnings": [],
+      "error": null
+    },
+    {
+      "gate": 5,
+      "name": "Single-turn smoke test",
+      "status": "pass",
+      "findings": [
+        {
+          "session_id": "gate5-fc3dcf77",
+          "status": "responded"
+        }
+      ],
+      "warnings": [],
+      "error": null
+    },
+    {
+      "gate": 6,
+      "name": "Multi-turn smoke test",
+      "status": "skipped",
+      "findings": [],
+      "warnings": [],
+      "error": null
+    }
+  ],
+  "overall": {
+    "passed": 5,
+    "failed": 0,
+    "skipped": 1,
+    "all_pass": true
+  }
+}
