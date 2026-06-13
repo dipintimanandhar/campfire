@@ -1,0 +1,85 @@
+name: "CI Test Campfire"
+
+on:
+  pull_request:
+    paths:
+      - 'campfire_project/cxas_app/campfire/**/*.yaml'
+      - 'campfire_project/cxas_app/campfire/**/*.yml'
+      - 'campfire_project/cxas_app/campfire/**/*.json'
+      - 'campfire_project/cxas_app/campfire/**/*.py'
+      - 'campfire_project/cxas_app/campfire/**/*.txt'
+  workflow_call:
+
+env:
+  PROJECT_ID: "workenv-466705"
+  LOCATION: "us"
+  GCP_WORKLOAD_IDENTITY_PROVIDER: "projects/workenv-466705/locations/global/workloadIdentityPools/gh/providers/gh"
+  GCP_SERVICE_ACCOUNT: "retailgcc@workenv-466705.iam.gserviceaccount.com"
+
+jobs:
+  test-campfire:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: false
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: true
+          swap-storage: true
+
+      # Authenticate to Google Cloud via Workload Identity Federation
+      # See https://github.com/google-github-actions/auth for configuration instructions
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ env.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ env.GCP_SERVICE_ACCOUNT }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker Auth
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: campfire_project/cxas_app/campfire
+          load: true
+          tags: agent-image
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Run CI Test Lifecycle (Docker)
+        run: |
+          D="[CI] PR-"
+          D="$D${{ github.event.pull_request.number }} Campfire"
+          docker run --rm \
+            -v ${{ github.workspace }}:/workspace \
+            -w /workspace \
+            -e PROJECT_ID=${{ env.PROJECT_ID }} \
+            -e LOCATION=${{ env.LOCATION }} \
+            -e GOOGLE_APPLICATION_CREDENTIALS=/workspace/application_default_credentials.json \
+            -v ${{ steps.auth.outputs.credentials_file_path }}:/workspace/application_default_credentials.json \
+            agent-image \
+            ci-test --app-dir campfire_project/cxas_app/campfire \
+                      --project-id ${{ env.PROJECT_ID }} \
+                      --location ${{ env.LOCATION }} \
+                      --display-name "$D"
+

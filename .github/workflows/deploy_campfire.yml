@@ -1,0 +1,77 @@
+name: "Deploy Campfire"
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'campfire_project/cxas_app/campfire/**/*.yaml'
+      - 'campfire_project/cxas_app/campfire/**/*.yml'
+      - 'campfire_project/cxas_app/campfire/**/*.json'
+      - 'campfire_project/cxas_app/campfire/**/*.py'
+      - 'campfire_project/cxas_app/campfire/**/*.txt'
+
+env:
+  PROJECT_ID: "workenv-466705"
+  LOCATION: "us"
+  APP_ID: "projects/workenv-466705/locations/us/apps/campfire"
+  DISPLAY_NAME: "Campfire"
+  GCP_WORKLOAD_IDENTITY_PROVIDER: "projects/workenv-466705/locations/global/workloadIdentityPools/gh/providers/gh"
+  GCP_SERVICE_ACCOUNT: "retailgcc@workenv-466705.iam.gserviceaccount.com"
+
+permissions:
+  contents: 'read'
+  id-token: 'write'
+
+jobs:
+  test-campfire:
+    uses: ./.github/workflows/ci_test_campfire.yml
+    secrets: inherit
+
+  deploy-campfire:
+    needs: test-campfire
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b
+        with:
+          enable-cache: true
+
+      # Authenticate to Google Cloud via Workload Identity Federation
+      # See https://github.com/google-github-actions/auth for configuration instructions
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ env.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ env.GCP_SERVICE_ACCOUNT }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker Auth
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev
+
+      - name: Install cxas-scrapi CLI
+        run: |
+          wget https://storage.googleapis.com/gassets-api-ai/ces-client-libraries/v1beta/ces-v1beta-py.tar
+          uv pip install ces-v1beta-py.tar --quiet
+          uv pip install cxas-scrapi
+
+      - name: Deploy to CX Agent Studio
+        run: |
+          cxas push --app-dir campfire_project/cxas_app/campfire \
+                         --to ${{ env.APP_ID }}
